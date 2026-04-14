@@ -44,10 +44,33 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
     val isAutoSaveEnabled by viewModel.isAutoSaveEnabled.collectAsState()
     val volume by viewModel.volume.collectAsState()
 
+    SettingsContent(
+        isSoundEnabled = isSoundEnabled,
+        highScore = highScore,
+        isAutoSaveEnabled = isAutoSaveEnabled,
+        volume = volume,
+        onSoundToggle = { viewModel.setSoundEnabled(it) },
+        onAutoSaveToggle = { viewModel.setAutoSaveEnabled(it) },
+        onVolumeChange = { viewModel.setVolume(it) },
+        modifier = modifier
+    )
+}
+
+@Composable
+fun SettingsContent(
+    isSoundEnabled: Boolean,
+    highScore: Int,
+    isAutoSaveEnabled: Boolean,
+    volume: Float,
+    onSoundToggle: (Boolean) -> Unit,
+    onAutoSaveToggle: (Boolean) -> Unit,
+    onVolumeChange: (Float) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(24.dp),
         horizontalAlignment = Alignment.Start
     ) {
         Text(
@@ -65,12 +88,12 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Âm thanh", modifier = Modifier.weight(1f))
+mmi            Text(text = "Âm thanh", modifier = Modifier.weight(1f), fontSize = 18.sp)
             Checkbox(
                 checked = isSoundEnabled,
-                onCheckedChange = { viewModel.setSoundEnabled(it) }
+                onCheckedChange = onSoundToggle
             )
-            Text(text = "Bật")
+            Text(text = "Bật", fontSize = 16.sp)
         }
 
         Row(
@@ -79,8 +102,8 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Điểm cao nhất", modifier = Modifier.weight(1f))
-            Text(text = highScore.toString())
+            Text(text = "Điểm cao nhất", modifier = Modifier.weight(1f), fontSize = 18.sp)
+            Text(text = highScore.toString(), fontSize = 18.sp)
         }
 
         Row(
@@ -89,20 +112,36 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Tự động lưu game", modifier = Modifier.weight(1f))
+            Text(text = "Tự động lưu game", modifier = Modifier.weight(1f), fontSize = 18.sp)
             Checkbox(
                 checked = isAutoSaveEnabled,
-                onCheckedChange = { viewModel.setAutoSaveEnabled(it) }
+                onCheckedChange = onAutoSaveToggle
             )
-            Text(text = "Bật")
+            Text(text = "Bật", fontSize = 16.sp)
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Volume")
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(text = "Volume", fontSize = 18.sp)
         Slider(
             value = volume,
-            onValueChange = { viewModel.setVolume(it) },
+            onValueChange = onVolumeChange,
             modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SettingsPreview() {
+    GameDoviTheme {
+        SettingsContent(
+            isSoundEnabled = true,
+            highScore = 3500,
+            isAutoSaveEnabled = true,
+            volume = 0.5f,
+            onSoundToggle = {},
+            onAutoSaveToggle = {},
+            onVolumeChange = {}
         )
     }
 }
